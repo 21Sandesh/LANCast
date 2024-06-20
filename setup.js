@@ -49,17 +49,33 @@ DB_PORT=3306
         };
 
         const startServers = () => {
-            exec('npm-run-all -p nstart rstart', (error, stdout, stderr) => {
+            // Start Node.js server
+            const nodeProcess = exec('node server/app.js', (error, stdout, stderr) => {
                 if (error) {
-                    console.error(`Error starting servers: ${error.message}`);
+                    console.error(`Error starting Node.js server: ${error.message}`);
                     return;
                 }
                 if (stderr) {
                     console.error(`stderr: ${stderr}`);
                     return;
                 }
-                console.log(`Servers started successfully:\n${stdout}`);
+                console.log(`Node.js server started successfully:\n${stdout}`);
             });
+
+            // Start React.js server
+            const reactProcess = exec('npm start --prefix client', (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`Error starting React.js server: ${error.message}`);
+                    return;
+                }
+                if (stderr) {
+                    console.error(`stderr: ${stderr}`);
+                    return;
+                }
+                console.log(`React.js server started successfully:\n${stdout}`);
+            });
+
+            // Optionally, you can handle events or other logic related to these processes here
         };
 
         const localIP = getLocalIP();
